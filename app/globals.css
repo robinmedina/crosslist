@@ -1,26 +1,124 @@
 @import "tailwindcss";
 
+/* Warm paper + ink palette with a chartreuse accent, square edges, mono labels. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #f9f8f5;
+  --card: #ffffff;
+  --sand: #f3f0ea;
+  --rule: #d7d4ce;
+  --rule-strong: #bbb8b3;
+  --ink: #1a1919;
+  --ink-black: #0c0a08;
+  --hushed: #6d6a65;
+  --faint: #a09e98;
+  --solar: #e4f222;
+  --live: #4a9455;
+  --danger: #c2410c;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-paper: var(--paper);
+  --color-card: var(--card);
+  --color-sand: var(--sand);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-ink: var(--ink);
+  --color-ink-black: var(--ink-black);
+  --color-hushed: var(--hushed);
+  --color-faint: var(--faint);
+  --color-solar: var(--solar);
+  --color-live: var(--live);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-inter-tight);
+  --font-mono: var(--font-plex-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Component classes sit in a layer so Tailwind utilities can override them. */
+@layer components {
+  /* Small uppercase mono label used for section headings and metadata. */
+  .eyebrow {
+    font-family: var(--font-plex-mono), ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--hushed);
+  }
+
+  .field {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    padding: 10px 12px;
+    font-size: 15px;
+    outline: none;
+    border-radius: 0;
+    transition: border-color 120ms;
+  }
+  .field:focus {
+    border-color: var(--ink);
+  }
+  .field::placeholder {
+    color: var(--faint);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 20px;
+    font-size: 15px;
+    font-weight: 500;
+    border: 1px solid transparent;
+    transition: background-color 120ms, color 120ms, border-color 120ms;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background: var(--ink-black);
+    color: #fff;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: #2f2d2b;
+  }
+  .btn-accent {
+    background: var(--solar);
+    color: var(--ink-black);
+  }
+  .btn-accent:hover:not(:disabled) {
+    background: #d6e31a;
+  }
+  .btn-ghost {
+    background: transparent;
+    border-color: var(--rule-strong);
+    color: var(--ink);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    border-color: var(--ink);
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+@keyframes pulse-dot {
+  50% {
+    opacity: 0.3;
+  }
+}
+.animate-pulse-dot {
+  animation: pulse-dot 1s ease-in-out infinite;
 }

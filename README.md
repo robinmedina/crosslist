@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Crosslist
 
-## Getting Started
+Snap a photo of an item, get a drafted title, description and price range, and list it on Depop, Poshmark, Vinted, Whatnot, eBay and Etsy at once. Add details later.
 
-First, run the development server:
+## Run it
 
 ```bash
+npm install
+cp .env.example .env.local   # add your Anthropic API key
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. On a phone on the same Wi-Fi, use your computer's local IP so the **Take a photo** button opens the camera.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Without `ANTHROPIC_API_KEY`, the app still works, but uses sample text and prices in place of photo analysis.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## How it works
 
-## Learn More
+- **`/new`**: take a photo, then `/api/analyze` sends up to 4 photos to Claude (`claude-opus-5-5`) and gets back a title, details, description and low/recommended/high prices. Review and tap **List**.
+- **`/items/[id]`**: fill in brand, size, tags and shipping whenever you want. Each marketplace shows its estimated fees and payout, any fields it still needs, and an optional price override. **Mark sold** pulls the listing from every other marketplace.
+- **`/`**: inventory with live, draft and sold filters.
 
-To learn more about Next.js, take a look at the following resources:
+## Current limits
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Publishing is simulated.** `lib/publish.ts` fakes each marketplace call. eBay (Sell API) and Etsy (Open API) have official listing APIs. Depop, Poshmark, Vinted and Whatnot don't offer public listing APIs, so they need partner access or browser automation.
+- **Data stays in this browser** (IndexedDB). Nothing syncs between devices yet.
+- **Fees are estimates** of US seller rates, not quotes.
+- **Prices are the model's estimate** from the photo, not live sold comps.
